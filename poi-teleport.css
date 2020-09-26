@@ -1,1 +1,8 @@
 /* Point of Interst Teleport */
+
+#poi-tp-ctx-menu {
+	position: fixed;
+	width: 100px;
+	height: 100px;
+	background-color: red;
+}
