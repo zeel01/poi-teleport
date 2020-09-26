@@ -1,7 +1,7 @@
 /** 
  * Point of Interest Teleporter
  */
-Added//CONFIG.debug.hooks = true;
+//CONFIG.debug.hooks = true;
 
 /**
  * @class PointOfInterestTeleporter
@@ -75,7 +75,7 @@ class PointOfInterestTeleporter {
 		ev.stopPropagation();
 		const pos = { x: ev.clientX, y: ev.clientY };
 
-		canvas.hud.poiTp.bind(this.note);
+		canvas.hud.poiTp.bind(this);
 		
 		
 	//	const ctxMenu = document.createElement("div");
@@ -86,6 +86,38 @@ class PointOfInterestTeleporter {
 	//	document.querySelector("body").appendChild(ctxMenu);
 
 		//this.scene.activate();
+	}
+	get x() { return this.note.x; }
+	get y() { return this.note.y; }
+
+	getOptions() {
+		return [
+			{
+				icon: `<i class="fas fa-bullseye fa-fw"></i>`,
+				title: "Activate",
+				trigger: "activateScene"
+			},
+			{
+				icon: `<i class="fas fa-eye fa-fw"></i>`,
+				title: "View",
+				trigger: "viewScene"
+			},
+			{
+				icon: `<i class="fas fa-scroll fa-fw"></i>`,
+				title: "Toggle Navigation",
+				trigger: "toggleNav"
+			}
+		]
+	}
+
+	activateScene() {
+		this.scene.activate();
+	}
+	viewScene() {
+		this.scene.view();
+	}
+	toggleNav() {
+		this.scene.update({ navigation: !this.scene.data.navigation });
 	}
 }
 
@@ -100,9 +132,29 @@ class PoiTpHUD extends BasePlaceableHUD {
 			template: "modules/poi-teleport/poi-hud.html"
 		});
 	}
+	bind(poitp) {
+		this.poitp = poitp;
+		super.bind(poitp.note);
+	}
+	getData() {
+		const data = {};
+
+		data.options = this.poitp.getOptions();
+
+		return data;
+	}
 	activateListeners(html) {
 		super.activateListeners(html);
 		html.click(e => e.stopPropagation());
+		html.find("[data-trigger]")
+			.click((event) => this.poitp[event.currentTarget.dataset.trigger](event));
+	}
+	setPosition(options = {}) {
+		const position = {
+			left: options.left || this.object.x,
+			top: options.top || this.object.y
+		};
+		this.element.css(position);
 	}
 }
 

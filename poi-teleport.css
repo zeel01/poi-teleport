@@ -1,8 +1,25 @@
 /* Point of Interst Teleport */
 
 #poi-tp-ctx-menu {
+	color: white;
+	border-radius: 8px;
+	font-size: 32px;
 	position: fixed;
-	width: 100px;
-	height: 100px;
-	background-color: red;
+	background: rgba(0, 0, 0, 0.6);
+}
+.poi-menu-list {
+	list-style: none;
+	padding: 0;
+	margin: 4px;
+	
+}
+.poi-menu-option {
+	padding: 2px;
+	white-space: nowrap;
+	z-index: 10;
+	pointer-events: all;
+	cursor: pointer;
+}
+.poi-menu-option:hover {
+	text-shadow: 0 0 8px red;
 }
