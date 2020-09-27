@@ -5,6 +5,9 @@ class PointOfInterestTeleporter {
 	/**
 	 * Handles on the canvasReady Hook.
 	 *
+	 * Checks all notes, and adds event listeners for
+	 * closing the note context menu. 
+	 *
 	 * @static
 	 * @memberof PointOfInterestTeleporter
 	 */
@@ -17,25 +20,77 @@ class PointOfInterestTeleporter {
 		console.log(game.i18n.localize("poitp.name"), "| Ready.");	
 	}
 
+	/**
+	 * Handles renderHeadsUpDisplay Hook.
+	 *
+	 * Creates a new HUD for map notes,
+	 * and adds it to the document.
+	 *
+	 * @static
+	 * @param {HeadsUpDisplay} hud - The heads up display container class
+	 * @param {jquery} html - The html of the HUD
+	 * @memberof PointOfInterestTeleporter
+	 */
 	static renderHeadsUpDisplay(hud, html) {
 		hud.poiTp = new PoiTpHUD();
 		const hudTemp = document.createElement("template");
 		hudTemp.id = "poi-tp-ctx-menu";
 		html.append(hudTemp);
 	}
+	/**
+	 * Handles the createNote Hook.
+	 *
+	 * Looks up the new note, and checks it.
+	 *
+	 * @static
+	 * @param {Scene} scene - The scene that the new note was created in
+	 * @param {object} noteData - A data object from the note, but not the first-class Note object
+	 * @return {void} Returns early if the new note couldn't be found
+	 * @memberof PointOfInterestTeleporter
+	 */
 	static createNote(scene, noteData) {
 		const note = canvas.notes.placeables.find(n => n.id == noteData._id);
 		if (!note) return;
 		this.checkNote(note);
 	}
+	/**
+	 * Handlers the getSceneDirectoryEntryContext Hook.
+	 *
+	 * Adds a new item to the scene directory context
+	 * menu. The new item allows for a new scene note
+	 * to be created in one click.
+	 *
+	 * The new option appears in place of the "Scene Notes"
+	 * option in the context menu if the scene doesn't have notes.
+	 *
+	 * @static
+	 * @param {jquery} html - The HTML of the directory tab
+	 * @param {object[]} options - An array of objects defining options in the context menu
+	 * @memberof PointOfInterestTeleporter
+	 */
 	static getSceneDirEnCtx(html, options) {
+		// Add this option at the third index, so that it appears in the same place that
+		// the scene notes option would appear
 		options.splice(2, 0, {
 			name: "poitp.createNote",
 			icon: '<i class="fas fa-scroll"></i>',
+			/**
+			 * Checks whether or not this option should be shown
+			 * 
+			 * @param {jquery} li - The list item of this option
+			 * @return {boolean} True if the scene doesn't have a journal entry defined
+			 */
 			condition: li => {
 				const scene = game.scenes.get(li.data("entityId"));
 				return !scene.journal;
 			},
+			/**
+			 * Creates a new Journal Entry for the scene,
+			 * with the same name as the scene. Then sets
+			 * the new note as the scene notes for that scene.
+			 *
+			 * @param {jquery} li - The list item of this option
+			 */
 			callback: li => {
 				const scene = game.scenes.get(li.data("entityId"));
 				JournalEntry.create({
@@ -72,7 +127,6 @@ class PointOfInterestTeleporter {
 		this.scene = scene;
 
 		this.activateListeners();
-		
 	}
 	/**
 	 * Activate any event handlers
@@ -85,20 +139,43 @@ class PointOfInterestTeleporter {
 	/**
 	 * Handle the right click event
 	 *
+	 * Binds this note to the context menu HUD
+	 * and prevents the event from bubbling
+	 *
+	 * @param {Event} event - The event that triggered this callback
 	 * @memberof PointOfInterestTeleporter
 	 */
 	_contextMenu(event) {
-		const pt = canvas.hud.poiTp;
-		const states = Application.RENDER_STATES;
-
 		event.stopPropagation();
-
-		pt.bind(this);
-		
+		canvas.hud.poiTp.bind(this);
 	}
+
+	/**
+	 * Convenience alias for the note x coordniate
+	 *
+	 * @readonly
+	 * @memberof PointOfInterestTeleporter
+	 */
 	get x() { return this.note.x; }
+	/**
+	* Convenience alias for the note y coordniate
+	*
+	* @readonly
+	* @memberof PointOfInterestTeleporter
+	*/
 	get y() { return this.note.y; }
 
+	/**
+	 * @typedef ContextMenuOption
+	 * @property {string} icon - A string of HTML representing a Font Awesome icon
+	 * @property {string} title - The text, or i18n reference, for the text to display on the option
+	 * @property {string} trigger - The name of a method of PointOfInterestTeleporter to call in response to clicking this option
+	 *//**
+	 * Returns an array of menu option for the context menu.
+	 *
+	 * @return {ContextMenuOption[]} 
+	 * @memberof PointOfInterestTeleporter
+	 */
 	getOptions() {
 		return [
 			{
@@ -118,18 +195,39 @@ class PointOfInterestTeleporter {
 			}
 		]
 	}
-
+	
+	/**
+	 * Activates the scene.
+	 *
+	 * @memberof PointOfInterestTeleporter
+	 */
 	activateScene() {
 		this.scene.activate();
 	}
+	/**
+	 * Shows the scene, but doens't activate it.
+	 *
+	 * @memberof PointOfInterestTeleporter
+	 */
 	viewScene() {
 		this.scene.view();
 	}
+	/**
+	 * Toggles whether or not the scene is shown in the navigation bar.
+	 *
+	 * @memberof PointOfInterestTeleporter
+	 */
 	toggleNav() {
 		this.scene.update({ navigation: !this.scene.data.navigation });
 	}
 }
 
+/**
+ * The HUD used as a context menu for map notes.
+ *
+ * @class PoiTpHUD
+ * @extends {BasePlaceableHUD}
+ */
 class PoiTpHUD extends BasePlaceableHUD {
 	/**
 	 * Assign the default options which are supported by the entity edit sheet
@@ -141,24 +239,64 @@ class PoiTpHUD extends BasePlaceableHUD {
 			template: "modules/poi-teleport/poi-hud.html"
 		});
 	}
+	/**
+	 * Binds an entity to the HUD
+	 *
+	 * The PointOfInterestTeleporter is stored,
+	 * and the note associated with it is bound.
+	 *
+	 * @override
+	 * @param {PointOfInterestTeleporter} poitp
+	 * @memberof PoiTpHUD
+	 */
 	bind(poitp) {
 		this.poitp = poitp;
 		super.bind(poitp.note);
 	}
+	/**
+	 * @typedef PoiTpHudData - Data to be sent to the POI TP HUD template
+	 * @property {ContextMenuOption[]} options - The set of options
+	 *//**
+	 * Creates a data object to be passed to this HUD's Handlesbars template
+	 *
+	 * @override
+	 * @return {PoiTpHudData}
+	 * @memberof PoiTpHUD - Data to be sent to the POI TP HUD template
+	 */
 	getData() {
+		/** @type PoiTpHudData */
 		const data = {};
 
 		data.options = this.poitp.getOptions();
 
 		return data;
 	}
+	/**
+	 * Activate any event listenders on the HUD
+	 * 
+	 * Activates a click listener to prevent propagation,
+	 * as activates click listeners for all menu options.
+	 *
+	 * Each option has its own handler, stored in its data-trigger.
+	 *
+	 * @override
+	 * @param {jquery} html - The html of the HUD
+	 * @memberof PoiTpHUD
+	 */
 	activateListeners(html) {
 		super.activateListeners(html);
 		html.click(e => e.stopPropagation());
 		html.find("[data-trigger]")
 			.click((event) => this.poitp[event.currentTarget.dataset.trigger](event));
 	}
-	setPosition(options = {}) {
+	
+	/**
+	 * Set's the position of the HUD to match the position of the map note.
+	 *
+	 * @override
+	 * @memberof PoiTpHUD
+	 */
+	setPosition() {
 		const position = {
 			left: this.object.x,
 			top: this.object.y
