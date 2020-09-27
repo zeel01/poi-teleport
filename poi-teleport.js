@@ -1,7 +1,7 @@
 /** 
  * Point of Interest Teleporter
  */
-//CONFIG.debug.hooks = true;
+CONFIG.debug.hooks = true;
 
 /**
  * @class PointOfInterestTeleporter
@@ -16,6 +16,9 @@ class PointOfInterestTeleporter {
 	static onReady() {
 		canvas.notes.placeables.forEach(n => this.checkNote(n));
 
+		canvas.mouseInteractionManager.target.on("rightdown", () => canvas.hud.poiTp.clear());
+		canvas.mouseInteractionManager.target.on("mousedown", () => canvas.hud.poiTp.clear());
+
 		console.log(game.i18n.localize("poitp.name"), "| Ready.");	
 	}
 
@@ -24,10 +27,14 @@ class PointOfInterestTeleporter {
 		const hudTemp = document.createElement("template");
 		hudTemp.id = "poi-tp-ctx-menu";
 		html.append(hudTemp);
-
-	//	$(document).on("click contextmenu", (event) => {
-	//		hud.poiTp.clear();
-	//	});
+	}
+	static createNote(scene, noteData) {
+		const note = canvas.notes.placeables.find(n => n.id == noteData._id);
+		if (!note) return;
+		this.checkNote(note);
+	}
+	static getSceneDirEnCtx() {
+		
 	}
 	/**
 	 * Checks if the supplied note is associated with a scene,
@@ -70,22 +77,13 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	_contextMenu(event) {
+		const pt = canvas.hud.poiTp;
+		const states = Application.RENDER_STATES;
+
 		event.stopPropagation();
-		const ev = event.data.originalEvent;
-		ev.stopPropagation();
-		const pos = { x: ev.clientX, y: ev.clientY };
 
-		canvas.hud.poiTp.bind(this);
+		pt.bind(this);
 		
-		
-	//	const ctxMenu = document.createElement("div");
-	//	ctxMenu.classList.add("poi-tp-ctx-menu");
-	//	ctxMenu.style.top = pos.y + "px";
-	//	ctxMenu.style.left = pos.x + "px";
-
-	//	document.querySelector("body").appendChild(ctxMenu);
-
-		//this.scene.activate();
 	}
 	get x() { return this.note.x; }
 	get y() { return this.note.y; }
@@ -151,12 +149,14 @@ class PoiTpHUD extends BasePlaceableHUD {
 	}
 	setPosition(options = {}) {
 		const position = {
-			left: options.left || this.object.x,
-			top: options.top || this.object.y
+			left: this.object.x,
+			top: this.object.y
 		};
 		this.element.css(position);
 	}
 }
 
-Hooks.on("renderHeadsUpDisplay", (...args) => PointOfInterestTeleporter.renderHeadsUpDisplay(...args))
+Hooks.on("getSceneDirectoryEntryContext", (...args) => PointOfInterestTeleporter.getSceneDirEnCtx(...args));
+Hooks.on("renderHeadsUpDisplay", (...args) => PointOfInterestTeleporter.renderHeadsUpDisplay(...args));
 Hooks.on("canvasReady", () => PointOfInterestTeleporter.onReady());
+Hooks.on("createNote", (...args) => PointOfInterestTeleporter.createNote(...args));
