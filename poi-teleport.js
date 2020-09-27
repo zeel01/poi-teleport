@@ -1,8 +1,3 @@
-/** 
- * Point of Interest Teleporter
- */
-CONFIG.debug.hooks = true;
-
 /**
  * @class PointOfInterestTeleporter
  */
@@ -33,8 +28,24 @@ class PointOfInterestTeleporter {
 		if (!note) return;
 		this.checkNote(note);
 	}
-	static getSceneDirEnCtx() {
-		
+	static getSceneDirEnCtx(html, options) {
+		options.splice(2, 0, {
+			name: "poitp.createNote",
+			icon: '<i class="fas fa-scroll"></i>',
+			condition: li => {
+				const scene = game.scenes.get(li.data("entityId"));
+				return !scene.journal;
+			},
+			callback: li => {
+				const scene = game.scenes.get(li.data("entityId"));
+				JournalEntry.create({
+					name: scene.name,
+					type: "base",
+					types: "base"
+				}, { renderSheet: true })
+				.then(entry => scene.update({ "journal": entry.id }));
+			}
+		});
 	}
 	/**
 	 * Checks if the supplied note is associated with a scene,
@@ -45,7 +56,7 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	static checkNote(note) {
-		const scene = game.scenes.find(s => s.data.journal == note.entry.id);
+		const scene = game.scenes.find(s => s.data?.journal == note?.entry?.id);
 		if (scene) new PointOfInterestTeleporter(note, scene); 
 	}
 
@@ -92,17 +103,17 @@ class PointOfInterestTeleporter {
 		return [
 			{
 				icon: `<i class="fas fa-bullseye fa-fw"></i>`,
-				title: "Activate",
+				title: "poitp.activate",
 				trigger: "activateScene"
 			},
 			{
 				icon: `<i class="fas fa-eye fa-fw"></i>`,
-				title: "View",
+				title: "poitp.view",
 				trigger: "viewScene"
 			},
 			{
 				icon: `<i class="fas fa-scroll fa-fw"></i>`,
-				title: "Toggle Navigation",
+				title: "poitp.toggleNav",
 				trigger: "toggleNav"
 			}
 		]
