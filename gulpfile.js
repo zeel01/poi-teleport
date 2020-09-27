@@ -8,6 +8,7 @@ function createRelease(cb) {
 		"module.json",
 		"poi-teleport.js",
 		"poi-teleport.css",
+		"poi-hud.html",
 		"lang/*"
 	], { base: "." })
 		.pipe(zip("poi-tp.zip"))
