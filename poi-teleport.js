@@ -54,7 +54,7 @@ class PointOfInterestTeleporter {
 		this.checkNote(note);
 	}
 	/**
-	 * Handlers the getSceneDirectoryEntryContext Hook.
+	 * Handles the getSceneDirectoryEntryContext Hook.
 	 *
 	 * Adds a new item to the scene directory context
 	 * menu. The new item allows for a new scene note
