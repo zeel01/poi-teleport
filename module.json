@@ -17,6 +17,11 @@
 			"lang": "en",
 			"name": "English",
 			"path": "lang/en.json"
+		},
+		{
+			"lang": "es",
+			"name": "Spanish",
+			"path": "lang/es.json"
 		}
 	],
 	"manifest": "https://raw.githubusercontent.com/zeel01/poi-teleport/master/module.json",
