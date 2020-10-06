@@ -3,9 +3,10 @@
 #poi-tp-ctx-menu {
 	color: white;
 	border-radius: 8px;
-	font-size: 32px;
+	font-size: 1.5em;
 	position: fixed;
 	background: rgba(0, 0, 0, 0.6);
+	transform-origin: top left;
 }
 .poi-menu-list {
 	list-style: none;
