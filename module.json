@@ -3,7 +3,7 @@
 	"title": "Point of Interest Teleporter",
 	"description": "Activate and view scenes directly from map notes.",
 	"author": "zeel",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"minimumCoreVersion": "0.6.6",
 	"compatibleCoreVersion": "0.6.6",
 	"scripts": [
@@ -26,5 +26,5 @@
 	],
 	"manifest": "https://raw.githubusercontent.com/zeel01/poi-teleport/master/module.json",
 	"url": "https://github.com/zeel01/poi-teleport",
-	"download": "https://github.com/zeel01/poi-teleport/releases/download/v0.1.1/poi-tp.zip"
+	"download": "https://github.com/zeel01/poi-teleport/releases/download/v0.1.2/poi-tp.zip"
 }
