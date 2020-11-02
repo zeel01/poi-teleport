@@ -35,6 +35,10 @@
 	"manifest": "https://raw.githubusercontent.com/zeel01/poi-teleport/master/module.json",
 	"url": "https://github.com/zeel01/poi-teleport",
 	"download": "https://github.com/zeel01/poi-teleport/releases/download/v0.1.3/poi-tp.zip",
+	"readme": "https://github.com/zeel01/poi-teleport/blob/master/readme.md",
+	"bugs": "https://github.com/zeel01/poi-teleport/issues",
+	"changelog": "https://github.com/zeel01/poi-teleport/releases",
+	"license": "https://github.com/zeel01/poi-teleport/blob/master/LICENSE",
 	"media": [
 		{
 			"type": "cover",
