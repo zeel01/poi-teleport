@@ -13,7 +13,7 @@
 	],
 	"version": "0.1.3",
 	"minimumCoreVersion": "0.6.6",
-	"compatibleCoreVersion": "0.7.5",
+	"compatibleCoreVersion": "0.7.8",
 	"scripts": [
 		"poi-teleport.js"
 	],
