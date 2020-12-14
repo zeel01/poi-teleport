@@ -177,25 +177,27 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	getOptions() {
-		let options = [];
-		if(this.scene.hasPerm(game.user,"3")) {
-			options = [
-				{
-					icon: `<i class="fas fa-bullseye fa-fw"></i>`,
-					title: "poitp.activate",
-					trigger: "activateScene"
-				},
-				{
-					icon: `<i class="fas fa-scroll fa-fw"></i>`,
-					title: "poitp.toggleNav",
-					trigger: "toggleNav"
-				}];
-		}
-		return [{
+		const options = [
+			{
 				icon: `<i class="fas fa-eye fa-fw"></i>`,
 				title: "poitp.view",
 				trigger: "viewScene"
-			}].concat(options);
+			}
+		];
+		const gmOptions = game.user.isGM ? [
+			{
+				icon: `<i class="fas fa-bullseye fa-fw"></i>`,
+				title: "poitp.activate",
+				trigger: "activateScene"
+			},
+			{
+				icon: `<i class="fas fa-scroll fa-fw"></i>`,
+				title: "poitp.toggleNav",
+				trigger: "toggleNav"
+			}
+		] : [];
+
+		return options.concat(gmOptions);
 	}
 	
 	/**
