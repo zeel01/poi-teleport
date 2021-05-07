@@ -1,8 +1,10 @@
-  
 {
-	"poitp.name": "Teletransportador del Punto de Interés",
-	"poitp.createNote": "Crear Notas de Escena",
-	"poitp.activate": "Activar Escena",
-	"poitp.view": "Ver Escena",
-	"poitp.toggleNav": "Alternar Navegación"
+	"I18N.LANGUAGE": "Español",
+	"I18N.MAINTAINERS": "sparkcity, @Viriato139ac#0342",
+	
+	"poitp.name": "Teleportador a punto de interés",
+	"poitp.createNote": "Crear notas de escena",
+	"poitp.activate": "Activar escena",
+	"poitp.view": "Ver escena",
+	"poitp.toggleNav": "Alternar navegación"
 }
