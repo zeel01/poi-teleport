@@ -11,9 +11,9 @@
 			"discord": "zeel#4200"
 		}
 	],
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"minimumCoreVersion": "0.6.6",
-	"compatibleCoreVersion": "0.7.8",
+	"compatibleCoreVersion": "0.8.6",
 	"scripts": [
 		"poi-teleport.js"
 	],
