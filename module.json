@@ -32,7 +32,7 @@
 			"path": "lang/es.json"
 		}
 	],
-	"manifest": "https://raw.githubusercontent.com/zeel01/releases/latest/download/module.json",
+	"manifest": "https://github.com/zeel01/poi-teleport/releases/latest/download/module.json",
 	"url": "https://github.com/zeel01/poi-teleport",
 	"download": "https://github.com/zeel01/poi-teleport/releases/latest/download/poi-teleport.zip",
 	"readme": "https://github.com/zeel01/poi-teleport/blob/master/readme.md",
