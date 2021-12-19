@@ -81,7 +81,7 @@ class PointOfInterestTeleporter {
 			 * @return {boolean} True if the scene doesn't have a journal entry defined
 			 */
 			condition: li => {
-				const scene = game.scenes.get(li.data("entityId"));
+				const scene = game.scenes.get(li.data("documentId"));
 				return !scene.journal;
 			},
 			/**
@@ -92,7 +92,7 @@ class PointOfInterestTeleporter {
 			 * @param {jquery} li - The list item of this option
 			 */
 			callback: li => {
-				const scene = game.scenes.get(li.data("entityId"));
+				const scene = game.scenes.get(li.data("documentId"));
 				JournalEntry.create({
 					name: scene.name,
 					type: "base",
