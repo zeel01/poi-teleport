@@ -111,7 +111,7 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	static checkNote(note) {
-		const scene = game.scenes.find(s => s.data?.journal == note?.entry?.id);
+		const scene = game.scenes.find(s => s?.journal?.id == note?.entry?.id)
 		if (scene) new PointOfInterestTeleporter(note, scene); 
 	}
 
