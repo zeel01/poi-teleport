@@ -37,22 +37,29 @@ class PointOfInterestTeleporter {
 		hudTemp.id = "poi-tp-ctx-menu";
 		html.append(hudTemp);
 	}
+
 	/**
 	 * Handles the createNote Hook.
 	 *
-	 * Looks up the new note, and checks it.
-	 *
 	 * @static
-	 * @param {Scene} scene - The scene that the new note was created in
-	 * @param {object} noteData - A data object from the note, but not the first-class Note object
-	 * @return {void} Returns early if the new note couldn't be found
+	 * @param {NoteDocument} noteDocument - The document associated with the new note
 	 * @memberof PointOfInterestTeleporter
 	 */
-	static createNote(scene, noteData) {
-		const note = canvas.notes.placeables.find(n => n.id == noteData._id);
-		if (!note) return;
-		this.checkNote(note);
+	static createNote(noteDocument) {
+		if (noteDocument.object) return this.checkNote(noteDocument.object);
 	}
+
+	/**
+	 * Handles updateNote Hook.
+	 *
+	 * @static
+	 * @param {NoteDocument} noteDocument - The document associated with the new note
+	 * @memberof PointOfInterestTeleporter
+	 */
+	static updateNote(noteDocument) {
+		if (noteDocument.object) return this.checkNote(noteDocument.object);
+	}
+
 	/**
 	 * Handles the getSceneDirectoryEntryContext Hook.
 	 *
@@ -102,6 +109,34 @@ class PointOfInterestTeleporter {
 			}
 		});
 	}
+
+	/**
+	 * Returns a promise that resolves on the next animation frame.
+	 *
+	 * @static
+	 * @return {Promise} A promise that resolves on the next animation frame
+	 * @memberof PointOfInterestTeleporter
+	 */
+	static nextFrame() {
+		return new Promise(resolve => window.requestAnimationFrame(resolve));
+	}
+
+	/**
+	 * Waits for the existence of a property on an object, or some limited number of loops.
+	 *
+	 * @static
+	 * @param {object} object
+	 * @param {string} property
+	 * @param {number} limit
+	 * @memberof PointOfInterestTeleporter
+	 * @return {Promise<boolean>} A promise that resolves when the property exists, or the limit is reached
+	 */
+	static async waitFor(object, property, limit) {
+		for (; limit > 0 && !object[property]; limit--) await this.nextFrame();
+		console.log(object, object[property]);
+		return Boolean(object[property]);
+	}
+
 	/**
 	 * Checks if the supplied note is associated with a scene,
 	 * if so creates a new PointOfInterestTeleporter for that note.
@@ -110,9 +145,13 @@ class PointOfInterestTeleporter {
 	 * @param {Note} note - A map note to check 
 	 * @memberof PointOfInterestTeleporter
 	 */
-	static checkNote(note) {
-		const scene = game.scenes.find(s => s.data?.journal == note?.entry?.id);
-		if (scene) new PointOfInterestTeleporter(note, scene); 
+	static async checkNote(note) {
+		const scene = game.scenes.find(s => s.journal?.id == note?.entry?.id);
+
+		if (!scene) return;
+		if (!await this.waitFor(note, "mouseInteractionManager", 60)) return;
+		
+		new PointOfInterestTeleporter(note, scene); 
 	}
 
 	/**
@@ -134,6 +173,7 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	activateListeners() {
+		console.log(this.note);
 		this.note.mouseInteractionManager.target.on("rightdown", this._contextMenu.bind(this));
 	}
 	/**
@@ -146,6 +186,7 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	_contextMenu(event) {
+		console.log(event);
 		event.stopPropagation();
 		canvas.hud.poiTp.bind(this);
 	}
@@ -222,7 +263,7 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	toggleNav() {
-		this.scene.update({ navigation: !this.scene.data.navigation });
+		this.scene.update({ navigation: !this.scene.navigation });
 	}
 }
 
@@ -313,3 +354,4 @@ Hooks.on("getSceneDirectoryEntryContext", (...args) => PointOfInterestTeleporter
 Hooks.on("renderHeadsUpDisplay", (...args) => PointOfInterestTeleporter.renderHeadsUpDisplay(...args));
 Hooks.on("canvasReady", () => PointOfInterestTeleporter.onReady());
 Hooks.on("createNote", (...args) => PointOfInterestTeleporter.createNote(...args));
+Hooks.on("updateNote", (...args) => PointOfInterestTeleporter.updateNote(...args));
