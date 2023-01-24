@@ -146,7 +146,13 @@ class PointOfInterestTeleporter {
 	 * @memberof PointOfInterestTeleporter
 	 */
 	static async checkNote(note) {
-		const scene = game.scenes.find(s => s.journal?.id == note?.entry?.id);
+		let scene;
+
+		if(note?.document?.pageId != null){
+			scene = game.scenes.find(s => (s.journalEntryPage != null && s.journalEntryPage == note?.document?.pageId));
+		}else{
+			scene = game.scenes.find(s => (s.journalEntryPage == null && s.journal?.id == note?.entry?.id));
+		}
 
 		if (!scene) return;
 		if (!await this.waitFor(note, "mouseInteractionManager", 60)) return;
