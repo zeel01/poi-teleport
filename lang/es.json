@@ -6,5 +6,6 @@
 	"poitp.createNote": "Crear notas de escena",
 	"poitp.activate": "Activar escena",
 	"poitp.view": "Ver escena",
-	"poitp.toggleNav": "Alternar navegación"
+	"poitp.toggleNav": "Alternar navegación",
+	"poitp.preLoadScene": "Precargar escena"
 }

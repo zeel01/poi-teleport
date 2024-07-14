@@ -3,5 +3,6 @@
 	"poitp.createNote": "Create Scene Notes",
 	"poitp.activate": "Activate Scene",
 	"poitp.view": "View Scene",
-	"poitp.toggleNav": "Toggle Navigation"
+	"poitp.toggleNav": "Toggle Navigation",
+	"poitp.preLoadScene": "Pre Load Scene"
 }

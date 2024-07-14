@@ -232,6 +232,11 @@ class PointOfInterestTeleporter {
 				trigger: "activateScene"
 			},
 			{
+				icon: `<i class="fas fa-download fa-fw"></i>`,
+				title: "poitp.preLoadScene",
+				trigger: "preLoadScene"
+			},
+			{
 				icon: `<i class="fas fa-scroll fa-fw"></i>`,
 				title: "poitp.toggleNav",
 				trigger: "toggleNav"
@@ -265,6 +270,14 @@ class PointOfInterestTeleporter {
 	toggleNav() {
 		this.scene.update({ navigation: !this.scene.navigation });
 	}
+	/**
+     * Preloads the scene.
+     *
+     * @memberof PointOfInterestTeleporter
+     */
+    preLoadScene() {
+		game.scenes.preload(this.scene.id, true);
+    }
 }
 
 /**
